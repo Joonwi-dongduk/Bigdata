@@ -11,10 +11,9 @@ import org.apache.hadoop.mapreduce.lib.output.*;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 public class UBERStudent20190996 {
-
+        
         public static class UBERMapper extends Mapper<Object, Text, Text, Text> {
                 public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-                        Calendar cal = Calendar.getInstance();
                         Text outputKey = new Text();
                         Text outputValue = new Text();
 
@@ -29,15 +28,14 @@ public class UBERStudent20190996 {
                         int month = Integer.parseInt(splitDate[0]);
                         int day = Integer.parseInt(splitDate[1]);
 
-                        cal.set(year, month - 1, day);
+                        LocalDate localDate = LocalDate.of(year, month, day);
 
                         outputKey.set(region);
-                        outputValue.set(Integer.toString(cal.DAY_OF_WEEK) + "," + trips + "," + vehicles);
+                        outputValue.set(localDate.getDayOfWeek().toString().substring(0, 3) + "," + trips + "," + vehicles);
 
                         context.write(outputKey, outputValue);
                 }
         }
-
 
         public static class UBERReducer extends Reducer<Text, Text, Text, Text> {
                 public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
@@ -45,29 +43,12 @@ public class UBERStudent20190996 {
                         String valueString;
 
                         for(Text value : values) {
-                                int date = Integer.valueOf(value.toString().split(",")[0]);
-                                switch(date) {
-                                        case 1: reduceKey.set(key + ",MON");
-                                                break;
-                                        case 2: reduceKey.set(key + ",TUE");
-                                                break;
-                                        case 3: reduceKey.set(key + ",WED");
-                                                break;
-                                        case 4: reduceKey.set(key + ",THR");
-                                                break;
-                                        case 5: reduceKey.set(key + ",FRI");
-                                                break;
-                                        case 6: reduceKey.set(key + ",SAT");
-                                                break;
-                                        case 7: reduceKey.set(key + ",SUN");
-                                                break;
-                                }
-
-                                valueString = value.toString().split(",")[1] + "," + value.toString().split(",")[2];
-                                context.write(reduceKey, new Text(valueString));
+                                reduceKey.set(key + "," + value.toString().substring(0,3));
+                                context.write(reduceKey, new Text(value.toString().substring(3)));
                         }
                 }
         }
+
 
         public static void main(String[] args) throws Exception {
                 Configuration conf = new Configuration();
