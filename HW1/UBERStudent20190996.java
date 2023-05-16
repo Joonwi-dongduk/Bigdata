@@ -11,7 +11,7 @@ import org.apache.hadoop.mapreduce.lib.output.*;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 public class UBERStudent20190996 {
-
+/*
         public static class UBERMapper extends Mapper<Text, Text, Text, Text> {
                 public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
                         Calendar cal = Calendar.getInstance();
@@ -66,7 +66,7 @@ public class UBERStudent20190996 {
                         }
                 }
         }
-
+*/
         public static void main(String[] args) throws Exception {
                 Configuration conf = new Configuration();
                 Job job = new Job(conf, "UBER");
