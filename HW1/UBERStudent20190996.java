@@ -11,9 +11,9 @@ import org.apache.hadoop.mapreduce.lib.output.*;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 public class UBERStudent20190996 {
-/*
-        public static class UBERMapper extends Mapper<Text, Text, Text, Text> {
-                public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
+
+        public static class UBERMapper extends Mapper<Object, Text, Text, Text> {
+                public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
                         Calendar cal = Calendar.getInstance();
                         Text outputKey = new Text();
                         Text outputValue = new Text();
@@ -29,13 +29,14 @@ public class UBERStudent20190996 {
                         int day = Integer.parseInt(date.split("/")[1]);
 
                         cal.set(year, month - 1, day);
-                        
+
                         outputKey.set(region);
                         outputValue.set(Integer.toString(cal.DAY_OF_WEEK) + "," + trips + "," + vehicles);
 
                         context.write(outputKey, outputValue);
                 }
         }
+
 
         public static class UBERReducer extends Reducer<Text, Text, Text, Text> {
                 public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
@@ -60,13 +61,13 @@ public class UBERStudent20190996 {
                                         case 7: reduceKey.set(key + ",SUN");
                                                 break;
                                 }
-                                
+
                                 valueString = value.toString().split(",")[1] + "," + value.toString().split(",")[2];
                                 context.write(reduceKey, new Text(valueString));
                         }
                 }
         }
-*/
+
         public static void main(String[] args) throws Exception {
                 Configuration conf = new Configuration();
                 Job job = new Job(conf, "UBER");
