@@ -16,7 +16,7 @@ public class IMDBStudent20190996 {
                 private Text outputKey = new Text();
 
                 public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-                        String genreList = value.toString().split("::")[1];
+                        String genreList = value.toString().split("::")[2];
                         StringTokenizer itr = new StringTokenizer(genreList,"|");
 
                         while (itr.hasMoreTokens()) {
