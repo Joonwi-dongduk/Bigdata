@@ -18,15 +18,16 @@ public class UBERStudent20190996 {
                         Text outputKey = new Text();
                         Text outputValue = new Text();
 
-                        String key_string = key.toString();
-                        String region = key_string.split(",")[0];
-                        String date = key_string.split(",")[1];
-                        String trips = key_string.split(",")[3];
-                        String vehicles = key_string.split(",")[2];
+                        String[] options = key.toString().split(",");
+                        String region = options[0];
+                        String date = options[1];
+                        String trips = options[3];
+                        String vehicles = options[2];
 
-                        int year = Integer.parseInt(date.split("/")[2]);
-                        int month = Integer.parseInt(date.split("/")[0]);
-                        int day = Integer.parseInt(date.split("/")[1]);
+                        String[] splitDate = date.split("/");
+                        int year = Integer.parseInt(splitDate[2]);
+                        int month = Integer.parseInt(splitDate[0]);
+                        int day = Integer.parseInt(splitDate[1]);
 
                         cal.set(year, month - 1, day);
 
