@@ -12,11 +12,12 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class IMDBStudent20190996 {
 
-        public static class IMDBMapper extends Mapper<Text, Text, Text, IntWritable> {
-                public void map(Text key, Text value, Context context) throws IOException, InterruptedException {
+        public static class IMDBMapper extends Mapper<Object, Text, Text, IntWritable> {
+                private Text outputKey = new Text();
+
+                public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
                         String genreList = value.toString().split("::")[1];
                         StringTokenizer itr = new StringTokenizer(genreList,"|");
-                        Text outputKey = new Text();
 
                         while (itr.hasMoreTokens()) {
                                 outputKey.set(itr.nextToken());
@@ -25,10 +26,8 @@ public class IMDBStudent20190996 {
                 }
         }
 
-        public static class IMDBReducer extends Reducer<Text, Text, Text, Text> {
+        public static class IMDBReducer extends Reducer<Text, IntWritable, Text, Text> {
                 public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-                        Text reduceKey = new Text();
-                        Text reduceValue = new Text();
                         int count = 0;
 
                         for(IntWritable i : values) {
@@ -49,7 +48,7 @@ public class IMDBStudent20190996 {
                 job.setOutputKeyClass(Text.class);
                 job.setOutputValueClass(Text.class);
 
-                job.setInputFormatClass(TextInputFormat.class);
+                job.setInputFormatClass(KeyValueTextInputFormat.class);
                 job.setOutputFormatClass(TextOutputFormat.class);
 
                 FileInputFormat.addInputPath(job, new Path(args[0]));
@@ -58,3 +57,4 @@ public class IMDBStudent20190996 {
                 job.waitForCompletion(true);
         }
 }
+
