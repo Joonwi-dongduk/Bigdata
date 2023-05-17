@@ -35,12 +35,16 @@ public class UBERStudent20190996 {
                 Text reduceValue = new Text();
 
                 public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+                        int trips;
+                        int vehicles;
                         int totalTrips = 0;
                         int totalVehicles = 0;
                         for(Text value : values) {
                                 String[] valList = value.toString().split(",");
-                                totalTrips += Integer.parseInt(valList[0]);
-                                totalVehicles += Integer.parseInt(valList[1]);
+                                trips = Integer.parseInt(valList[0]);
+                                vehicles = Integer.parseInt(valList[1]);
+                                totalTrips += trips;
+                                totalVehicles += vehicles;
                         }
                         reduceValue.set(totalTrips + "," + totalVehicles);
                         context.write(key, reduceValue);
