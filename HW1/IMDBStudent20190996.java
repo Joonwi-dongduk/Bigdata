@@ -54,7 +54,7 @@ public class IMDBStudent20190996 {
 
                 job.setJarByClass(IMDBStudent20190996.class);
                 job.setMapperClass(IMDBStudent20190996Mapper.class);
-                job.setCombinerClass(IMDBStudent20190996Reducer.class)
+                job.setCombinerClass(IMDBStudent20190996Reducer.class);
                 job.setReducerClass(IMDBStudent20190996Reducer.class);
 
                 job.setOutputKeyClass(Text.class);
