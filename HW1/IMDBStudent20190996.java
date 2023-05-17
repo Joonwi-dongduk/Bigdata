@@ -12,8 +12,9 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class IMDBStudent20190996 {
 
-        public static class IMDBMapper extends Mapper<Object, Text, Text, IntWritable> {
+        public static class IMDBStudent20190996Mapper extends Mapper<Object, Text, Text, IntWritable> {
                 private Text outputKey = new Text();
+                private IntWritable value = new IntWritable(1);
 
                 public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
                         String genreList = value.toString().split("::")[2];
@@ -21,19 +22,21 @@ public class IMDBStudent20190996 {
 
                         while (itr.hasMoreTokens()) {
                                 outputKey.set(itr.nextToken());
-                                context.write(outputKey, new IntWritable(1));
+                                context.write(outputKey, value);
                         }
                 }
         }
 
-        public static class IMDBReducer extends Reducer<Text, IntWritable, Text, Text> {
+        public static class IMDBStudent20190996Reducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+                private IntWritable val = new IntWritable();
                 public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
                         int count = 0;
 
                         for(IntWritable i : values) {
                                 count += i.get();
                         }
-                        context.write(key, new Text(String.valueOf(count)) );
+                        val.set(count);
+                        context.write(key, val);
                 }
         }
 
@@ -42,11 +45,11 @@ public class IMDBStudent20190996 {
                 Job job = new Job(conf, "IMDB");
 
                 job.setJarByClass(IMDBStudent20190996.class);
-                job.setMapperClass(IMDBMapper.class);
-                job.setReducerClass(IMDBReducer.class);
+                job.setMapperClass(IMDBStudent20190996Mapper.class);
+                job.setReducerClass(IMDBStudent20190996Reducer.class);
 
                 job.setOutputKeyClass(Text.class);
-                job.setOutputValueClass(Text.class);
+                job.setOutputValueClass(IntWritable.class);
 
                 job.setInputFormatClass(KeyValueTextInputFormat.class);
                 job.setOutputFormatClass(TextOutputFormat.class);
@@ -57,4 +60,3 @@ public class IMDBStudent20190996 {
                 job.waitForCompletion(true);
         }
 }
-
