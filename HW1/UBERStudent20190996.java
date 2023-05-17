@@ -33,11 +33,10 @@ public class UBERStudent20190996 {
 
         public static class UBERStudent20190996Reducer extends Reducer<Text, Text, Text, Text> {
                 Text reduceValue = new Text();
-                int totalTrips = 0;
-                int totalVehicles = 0;
 
                 public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-
+                        int totalTrips = 0;
+                        int totalVehicles = 0;
                         for(Text value : values) {
                                 String[] valList = value.toString().split(",");
                                 totalTrips += Integer.parseInt(valList[0]);
