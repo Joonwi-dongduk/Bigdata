@@ -42,7 +42,14 @@ public class IMDBStudent20190996 {
 
         public static void main(String[] args) throws Exception {
                 Configuration conf = new Configuration();
-                Job job = new Job(conf, "IMDB");
+                String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
+                if (otherArgs.length != 2) 
+                {
+                        System.err.println("Usage: IMDBStudent20190996 <in> <out>");
+                        System.exit(2);
+                }
+
+                Job job = new Job(conf, "IMDBStudent20190996");
 
                 job.setJarByClass(IMDBStudent20190996.class);
                 job.setMapperClass(IMDBStudent20190996Mapper.class);
@@ -51,12 +58,9 @@ public class IMDBStudent20190996 {
                 job.setOutputKeyClass(Text.class);
                 job.setOutputValueClass(IntWritable.class);
 
-                job.setInputFormatClass(KeyValueTextInputFormat.class);
-                job.setOutputFormatClass(TextOutputFormat.class);
-
-                FileInputFormat.addInputPath(job, new Path(args[0]));
-                FileOutputFormat.setOutputPath(job, new Path(args[1]));
-                FileSystem.get(job.getConfiguration()).delete(new Path(args[1]), true);
-                job.waitForCompletion(true);
+                FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
+                FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
+                FileSystem.get(job.getConfiguration()).delete(new Path(otherArgs[1]), true);
+                System.exit(job.waitForCompletion(true) ? 0 : 1);
         }
 }
