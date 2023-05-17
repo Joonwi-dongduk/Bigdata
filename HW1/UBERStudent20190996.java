@@ -12,7 +12,7 @@ import org.apache.hadoop.mapreduce.lib.output.*;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 public class UBERStudent20190996 {
-        
+
         public static class UBERStudent20190996Mapper extends Mapper<Object, Text, Text, Text> {
                 Text outputKey = new Text();
                 Text outputValue = new Text();
@@ -31,21 +31,28 @@ public class UBERStudent20190996 {
 
                         LocalDate localDate = LocalDate.of(year, month, day);
 
-                        outputKey.set(region);
-                        outputValue.set(localDate.getDayOfWeek().toString().substring(0, 3) + "," + trips + "," + vehicles);
+                        outputKey.set(region + "," + localDate.getDayOfWeek().toString().substring(0, 3));
+                        outputValue.set(trips + "," + vehicles);
 
                         context.write(outputKey, outputValue);
                 }
         }
 
+
         public static class UBERStudent20190996Reducer extends Reducer<Text, Text, Text, Text> {
-                Text reduceKey = new Text();
+                Text reduceValue = new Text();
+                int totalTrips = 0;
+                int totalVehicles = 0;
+
                 public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-                        
+
                         for(Text value : values) {
-                                reduceKey.set(key + "," + value.toString().substring(0,3));
-                                context.write(reduceKey, new Text(value.toString().substring(4)));
+                                String[] valList = value.toString().split(",");
+                                totalTrips += Integer.parseInt(valList[0]);
+                                totalVehicles += Integer.parseInt(valList[1]);
                         }
+                        reduceValue.set(totalTrips + "," + totalVehicles);
+                        context.write(key, reduceValue);
                 }
         }
 
@@ -53,7 +60,7 @@ public class UBERStudent20190996 {
         public static void main(String[] args) throws Exception {
                 Configuration conf = new Configuration();
                 String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
-                if (otherArgs.length != 2) 
+                if (otherArgs.length != 2)
                 {
                         System.err.println("Usage: UBERStudent20190996 <in> <out>");
                         System.exit(2);
