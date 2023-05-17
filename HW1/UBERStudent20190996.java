@@ -12,10 +12,10 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class UBERStudent20190996 {
         
-        public static class UBERMapper extends Mapper<Object, Text, Text, Text> {
+        public static class UBERStudent20190996Mapper extends Mapper<Object, Text, Text, Text> {
+                Text outputKey = new Text();
+                Text outputValue = new Text();
                 public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-                        Text outputKey = new Text();
-                        Text outputValue = new Text();
 
                         String[] options = key.toString().split(",");
                         String region = options[0];
@@ -37,11 +37,10 @@ public class UBERStudent20190996 {
                 }
         }
 
-        public static class UBERReducer extends Reducer<Text, Text, Text, Text> {
+        public static class UBERStudent20190996Reducer extends Reducer<Text, Text, Text, Text> {
+                Text reduceKey = new Text();
                 public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-                        Text reduceKey = new Text();
-                        String valueString;
-
+                        
                         for(Text value : values) {
                                 reduceKey.set(key + "," + value.toString().substring(0,3));
                                 context.write(reduceKey, new Text(value.toString().substring(3)));
@@ -52,25 +51,25 @@ public class UBERStudent20190996 {
 
         public static void main(String[] args) throws Exception {
                 Configuration conf = new Configuration();
+                String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
+                if (otherArgs.length != 2) 
+                {
+                        System.err.println("Usage: UBERStudent20190996 <in> <out>");
+                        System.exit(2);
+                }
+
                 Job job = new Job(conf, "UBER");
 
                 job.setJarByClass(UBERStudent20190996.class);
-                job.setMapperClass(UBERMapper.class);
-                job.setReducerClass(UBERReducer.class);
+                job.setMapperClass(UBERStudent20190996Mapper.class);
+                job.setReducerClass(UBERStudent20190996Reducer.class);
 
                 job.setOutputKeyClass(Text.class);
                 job.setOutputValueClass(Text.class);
 
-                job.setInputFormatClass(TextInputFormat.class);
-                job.setOutputFormatClass(TextOutputFormat.class);
-
-                FileInputFormat.addInputPath(job, new Path(args[0]));
-                FileOutputFormat.setOutputPath(job, new Path(args[1]));
-                FileSystem.get(job.getConfiguration()).delete(new Path(args[1]), true);
-                job.waitForCompletion(true);
+                FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
+                FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
+                FileSystem.get(job.getConfiguration()).delete(new Path(otherArgs[1]), true);
+                System.exit(job.waitForCompletion(true) ? 0 : 1);
         }
 }
-                                                                                                 89,1         바닥
-
-
-
