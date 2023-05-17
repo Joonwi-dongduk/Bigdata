@@ -14,16 +14,16 @@ public class IMDBStudent20190996 {
 
         public static class IMDBStudent20190996Mapper extends Mapper<Object, Text, Text, IntWritable> {
                 private Text outputKey = new Text();
-                private IntWritable value = new IntWritable(1);
+                private IntWritable outputvalue = new IntWritable(1);
 
                 public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
                         String[] str = value.toString().split("::");
-                        String genreList = str[str.length() - 1];
+                        String genreList = str[str.length - 1];
                         StringTokenizer itr = new StringTokenizer(genreList,"|");
 
                         while (itr.hasMoreTokens()) {
                                 outputKey.set(itr.nextToken());
-                                context.write(outputKey, value);
+                                context.write(outputKey, outputvalue);
                         }
                 }
         }
