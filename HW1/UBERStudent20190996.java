@@ -44,7 +44,7 @@ public class UBERStudent20190996 {
                         
                         for(Text value : values) {
                                 reduceKey.set(key + "," + value.toString().substring(0,3));
-                                context.write(reduceKey, new Text(value.toString().substring(3)));
+                                context.write(reduceKey, new Text(value.toString().substring(4)));
                         }
                 }
         }
