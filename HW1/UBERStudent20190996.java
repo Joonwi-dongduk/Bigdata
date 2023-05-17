@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
 import org.apache.hadoop.conf.*;
 import org.apache.hadoop.fs.FileSystem;
@@ -16,22 +15,15 @@ public class UBERStudent20190996 {
         public static class UBERStudent20190996Mapper extends Mapper<Object, Text, Text, Text> {
                 Text outputKey = new Text();
                 Text outputValue = new Text();
+                public static String[] dateList = {"SUN", "MON", "TUE", "WED", "THR", "FRI", "SAT"};
                 public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
                         String[] options = value.toString().split(",");
                         String region = options[0];
-                        String date = options[1];
+                        Date date = new Date(options[1]);
                         String trips = options[3];
                         String vehicles = options[2];
-
-                        String[] splitDate = date.split("/");
-                        int year = Integer.parseInt(splitDate[2]);
-                        int month = Integer.parseInt(splitDate[0]);
-                        int day = Integer.parseInt(splitDate[1]);
-
-                        LocalDate localDate = LocalDate.of(year, month, day);
-
-                        outputKey.set(region + "," + localDate.getDayOfWeek().toString().substring(0, 3));
+                        outputKey.set(region + "," + dateList[date.getDay()]);
                         outputValue.set(trips + "," + vehicles);
 
                         context.write(outputKey, outputValue);
