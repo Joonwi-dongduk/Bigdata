@@ -17,7 +17,8 @@ public class IMDBStudent20190996 {
                 private IntWritable value = new IntWritable(1);
 
                 public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-                        String genreList = value.toString().split("::")[2];
+                        String[] str = value.toString().split("::");
+                        String genreList = str[str.length() - 1];
                         StringTokenizer itr = new StringTokenizer(genreList,"|");
 
                         while (itr.hasMoreTokens()) {
@@ -53,6 +54,7 @@ public class IMDBStudent20190996 {
 
                 job.setJarByClass(IMDBStudent20190996.class);
                 job.setMapperClass(IMDBStudent20190996Mapper.class);
+                job.setCombinerClass(IMDBStudent20190996Reducer.class)
                 job.setReducerClass(IMDBStudent20190996Reducer.class);
 
                 job.setOutputKeyClass(Text.class);
