@@ -18,7 +18,7 @@ public class UBERStudent20190996 {
                 Text outputValue = new Text();
                 public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
-                        String[] options = key.toString().split(",");
+                        String[] options = value.toString().split(",");
                         String region = options[0];
                         String date = options[1];
                         String trips = options[3];
